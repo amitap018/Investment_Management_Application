@@ -1,0 +1,149 @@
+﻿@model Login.Models.Grievance
+
+@{
+    ViewData["Title"] = "Submit Grievance";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Investment Portfolio Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .grievance-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .grievance-card {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .grievance-title {
+            color: white;
+            background-color: #155454;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.50rem;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 30px; /* Added margin-bottom */
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            background-color: #155454;
+            border-color: #155454;
+            padding: 10px 20px; /* Adjust padding for middle size */
+            font-size: 1rem; /* Adjust font size for middle size */
+            color: white; /* Ensure text is visible */
+            width: 100%; /* Ensure button takes full width in its container */
+        }
+
+        .btn-secondary {
+            background-color: #f8f9fa;
+            border-color: #155454;
+            color: #155454;
+        }
+
+            .btn-primary:hover,
+            .btn-secondary:hover {
+                background-color: #4b9393;
+                border-color: #4b9393;
+                color: white; /* Ensure text is visible */
+            }
+
+        .text-center a {
+            color: #155454;
+        }
+
+            .text-center a:hover {
+                color: #4b9393;
+            }
+
+        .grievance-img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .card-header {
+            background: transparent;
+            text-align: center;
+            border-bottom: none; /* Remove the bottom border */
+        }
+
+        .form-section {
+            padding-top: 10px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            padding-left: 40px; /* Space between image and form */
+            flex: 1;
+        }
+
+        .img-section {
+            flex: 1;
+        }
+
+        .form-container {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container grievance-container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card shadow-lg p-4 mb-5 bg-white grievance-card">
+                    <div class="img-section">
+                        <img src="~/Images/grievance.png" class="card-img grievance-img" alt="Grievance Image">
+                    </div>
+                    <div class="form-section">
+                        <div class="form-container">
+                            <h4 class="grievance-title">Submit Your Grievance</h4>
+                            <form asp-action="SubmitGrievance" method="post" class="needs-validation" novalidate>
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="Subject" class="control-label"></label>
+                                    <input asp-for="Subject" class="form-control" required />
+                                    <span asp-validation-for="Subject" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Description" class="control-label"></label>
+                                    <textarea asp-for="Description" class="form-control" rows="4" required></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                            <div class="text-center mt-3">
+                                <a asp-action="UserGrievances" class="btn btn-secondary">View Grievances</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+

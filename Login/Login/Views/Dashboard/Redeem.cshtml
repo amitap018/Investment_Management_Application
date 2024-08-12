@@ -1,0 +1,137 @@
+﻿@model Login.Models.UserFund
+
+@{
+    ViewData["Title"] = "Redeem Investment";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Redeem Investment</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+        body {
+            background-image: url('@Url.Content("~/Images/image.png")');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #343a40;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            height: auto; /* Reduce the height */
+        }
+
+        h2, h4 {
+            color: #155454;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        dl.row {
+            margin: 0;
+            padding: 10px 0;
+            border-radius: 10px;
+        }
+
+        dt {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #155454;
+            font-size: 0.9rem;
+        }
+
+        dd {
+            margin-bottom: 5px;
+            color: #4b9393;
+            font-size: 0.9rem;
+        }
+
+        hr {
+            border-top: 1px solid #155454;
+        }
+
+        .btn-primary {
+            background-color: #155454;
+            border-color: #155454;
+            color: white;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+            .btn-primary:hover {
+                transform: scale(1.05);
+                background-color: #0d3838;
+                border-color: #0d3838;
+            }
+
+        .btn-secondary {
+            background-color: #4b9393;
+            border-color: #4b9393;
+            color: white;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+            .btn-secondary:hover {
+                transform: scale(1.05);
+                background-color: #3b8383;
+                border-color: #3b8383;
+            }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+            .btn-danger:hover {
+                transform: scale(1.05);
+                background-color: #b02a37;
+                border-color: #b02a37;
+            }
+    </style>
+</head>
+<body>
+    
+        <h2>Redeem Investment</h2>
+        <h4>@Model.MutualFund.FundName</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">Folio Number</dt>
+            <dd class="col-sm-8">@Model.FolioNumber</dd>
+            <dt class="col-sm-4">Invested Amount</dt>
+            <dd class="col-sm-8">₹@ViewBag.InvestedAmount</dd>
+            <dt class="col-sm-4">P&L</dt>
+            <dd class="col-sm-8">₹@ViewBag.PAndL</dd>
+            <dt class="col-sm-4">Taxes</dt>
+            <dd class="col-sm-8">₹@ViewBag.Taxes</dd>
+            <dt class="col-sm-4">Commission</dt>
+            <dd class="col-sm-8">₹@ViewBag.Commission</dd>
+            <dt class="col-sm-4">Exit Load</dt>
+            <dd class="col-sm-8">₹@ViewBag.ExitLoad</dd>
+            <dt class="col-sm-4">Exit Period (Months)</dt>
+            <dd class="col-sm-8">@ViewBag.ExitPeriodMonths<a> Months</a></dd>
+            <dt class="col-sm-4">Amount to Receive</dt>
+            <dd class="col-sm-8">₹@ViewBag.AmountToReceive</dd>
+        </dl>
+
+        <form method="post" asp-action="RedeemConfirmed">
+            <input type="hidden" name="folioNumber" value="@Model.FolioNumber" />
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-danger">Confirm Redemption</button>
+                <a asp-action="Index" asp-route-userId="@Model.UserId" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    
+</body>
+</html>

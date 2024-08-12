@@ -1,0 +1,108 @@
+﻿@model Login.Models.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+
+    var fundLogos = new Dictionary<string, string>
+    {
+        { "Mid-Cap Equity Fund", Url.Content("~/Images/mid_cap_equity_fund.png") },
+        { "High-Cap Debt Fund", Url.Content("~/Images/high_cap_debt_fund.png") },
+        { "Balanced Fund", Url.Content("~/Images/balanced_fund.png") },
+        { "Low-Cap Equity Fund", Url.Content("~/Images/low_cap_equity_fund.png") },
+        { "Global Debt Fund", Url.Content("~/Images/global_debt_fund.png") },
+        { "High-Cap Balanced Fund", Url.Content("~/Images/high_cap_balanced_fund.png") },
+        { "Low-Cap Debt Fund", Url.Content("~/Images/low_cap_debt_fund.png") },
+        { "Mid-Cap Balanced Fund", Url.Content("~/Images/mid_cap_balanced_fund.png") },
+        { "Global Equity Fund", Url.Content("~/Images/global_equity_fund.png") },
+        { "Mid-Cap Debt Fund", Url.Content("~/Images/mid_cap_debt_fund.png") }
+    };
+
+    var fundLogo = fundLogos.ContainsKey(Model.MutualFund.FundName) ? fundLogos[Model.MutualFund.FundName] : "~/Images/default_fund_logo.png";
+}
+
+<div class="container mt-5" style="max-width: 700px;">
+    <div class="card shadow-sm">
+        <div class="card-header text-white d-flex align-items-center" style="background-color:#386868">
+            <img src="@fundLogo" alt="@Model.MutualFund.FundName Logo" style="width: 40px; height: 40px; margin-right: 10px;">
+            <h1 class="h4 mb-0">@Model.MutualFund.FundName</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <strong>Order ID:</strong>
+                        <span>@Model.OrderId</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Timestamp:</strong>
+                        <span>@Model.Timestamp</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Units:</strong>
+                        <span>@Model.Units</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Unit Price:</strong>
+                        <span>@Model.UnitPrice</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <strong>Amount:</strong>
+                        <span>@Model.Amount</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Is SIP:</strong>
+                        <span>@Model.IsSip</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Transaction Type:</strong>
+                        <span>@Model.TransactionType<span/>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Folio Number:</strong>
+                        <span>@Model.FolioNumber</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-3 text-center">
+        <a asp-action="UserOrders" asp-route-userId="@Model.UserId" class="btn btn-custom">Back to User Orders</a>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 0.5rem;
+    }
+
+    .card-header {
+        border-radius: 0.5rem 0.5rem 0 0;
+        padding: 10px;
+    }
+
+    .card-body {
+        padding: 25px;
+        font-size:1.1rem;
+    }
+
+    .mb-2 {
+        padding: 0.25rem 0;
+    }
+
+    .mt-3 {
+        margin-top: 1rem;
+    }
+
+    .btn-custom {
+        background-color: #155454;
+        color: white;
+        border: none;
+    }
+
+        .btn-custom:hover {
+            background-color: #367777;
+            color: white;
+        }
+</style>

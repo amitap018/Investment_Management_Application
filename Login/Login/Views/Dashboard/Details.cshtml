@@ -1,0 +1,117 @@
+﻿@model Login.Models.UserFund
+
+@{
+    ViewData["Title"] = "Investment Details";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Investment Details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+        body {
+            background-image: url('@Url.Content("~/Images/image.png")');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #343a40;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .card-header {
+            background-color: #155454;
+            color: white;
+            border-bottom: none;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 1.25rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .btn-secondary {
+            background-color: #4b9393;
+            border-color: #4b9393;
+            color: white;
+            transition: transform 0.2s, background-color 0.2s;
+            border-radius: 5px;
+            padding: 8px 16px;
+            font-size: 1rem;
+        }
+
+            .btn-secondary:hover {
+                transform: scale(1.05);
+                background-color: #3b8383;
+                border-color: #3b8383;
+            }
+
+        dl.row {
+            margin: 0;
+            padding: 10px 0;
+            border-radius: 10px;
+        }
+
+        dt {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #155454;
+            font-size: 0.9rem;
+        }
+
+        dd {
+            margin-bottom: 5px;
+            color: #4b9393;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+   
+        <div class="card-header">
+            User Fund Details
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">Folio Number</dt>
+                <dd class="col-sm-8">@Model.FolioNumber</dd>
+                <dt class="col-sm-4">Fund Name</dt>
+                <dd class="col-sm-8">@Model.MutualFund.FundName</dd>
+                <dt class="col-sm-4">Invested Amount</dt>
+                <dd class="col-sm-8">₹@Model.InvestedAmount</dd>
+                <dt class="col-sm-4">Current Value</dt>
+                <dd class="col-sm-8">₹@Model.CurrentValue</dd>
+                <dt class="col-sm-4">P&L</dt>
+                <dd class="col-sm-8">₹@Model.PAndL</dd>
+                <dt class="col-sm-4">Expense Amount</dt>
+                <dd class="col-sm-8">₹@Model.ExpenseAmount</dd>
+                <dt class="col-sm-4">Taxes</dt>
+                <dd class="col-sm-8">₹@Model.Taxes</dd>
+                <dt class="col-sm-4">Commission</dt>
+                <dd class="col-sm-8">₹@Model.Commission</dd>
+                <dt class="col-sm-4">Units</dt>
+                <dd class="col-sm-8">@Model.Units</dd>
+            </dl>
+            <div class="text-right">
+                <a asp-action="Index" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        
+    </div>
+</body>
+</html>

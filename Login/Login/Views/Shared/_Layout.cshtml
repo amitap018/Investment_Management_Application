@@ -1,0 +1,233 @@
+﻿@* @using System.Security.Claims
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"] - Investment Portfolio Management</title>
+    <!-- Bootstrap CSS for styling -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <style>
+        /* Style for dropdown menu items */
+
+        .dropdown-menu a {
+            color: #000 !important; /* Make text color black */
+        }
+
+            .dropdown-menu a:hover {
+                background-color: #f8f9fa; /* Light background on hover */
+                color: #000 !important; /* Ensure text color remains black on hover */
+            }
+    </style>
+</head>
+<body style="background-image: url('@Url.Content("~/Images/image.png")'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;position: relative;">
+    <!-- Check if the user is authenticated -->
+    @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+    {
+        <!-- Navigation bar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Investment Portfolio Management</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <!-- Dashboard link -->
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Orders link with userId parameter -->
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="UserOrders" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Mutual Funds link -->
+                        <a class="nav-link text-dark" asp-area="" asp-controller="MutualFunds" asp-action="Index">Mutual Funds</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <!-- Customer Support dropdown menu -->
+                        <a class="nav-link dropdown-toggle text-dark" href="#" id="customerSupportDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Customer Support
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="customerSupportDropdown">
+                            <!-- Submit Feedback link -->
+                            <a class="dropdown-item" asp-controller="CustomerSupport" asp-action="SubmitFeedback">Submit Feedback</a>
+                            <!-- Submit Grievance link -->
+                            <a class="dropdown-item" asp-controller="CustomerSupport" asp-action="SubmitGrievance">Submit Grievance</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <!-- Profile dropdown menu -->
+                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="https://img.icons8.com/ios-glyphs/30/000000/user--v1.png" alt="Profile Icon" />
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                            <!-- Profile link with userId parameter -->
+                            <a class="dropdown-item" asp-controller="SignUp" asp-action="Details" asp-route-id="@HttpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)">Profile</a>
+                            <!-- Logout link -->
+                            <a class="dropdown-item" asp-controller="SignUp" asp-action="Logout">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    }
+
+    <!-- Container for the main content of the page -->
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <!-- jQuery and Bootstrap scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- jQuery validation scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+    @RenderSection("Scripts", required: false)
+
+    <!-- Script to clear form fields on page load -->
+    <script>
+        $(document).ready(function () {
+            $('form').each(function () {
+                this.reset(); // Reset each form on page load
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+</html> *@
+
+
+
+
+@using System.Security.Claims
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"] - Investment Portfolio Management</title>
+    <!-- Bootstrap CSS for styling -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <style>
+        /* Style for dropdown menu items */
+        .dropdown-menu a {
+            color: #000 !important; /* Make text color black */
+        }
+
+            .dropdown-menu a:hover {
+                background-color: #f8f9fa; /* Light background on hover */
+                color: #000 !important; /* Ensure text color remains black on hover */
+            }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: #155454; /* Primary color */
+        }
+
+        .navbar-brand {
+            color: #fff !important; /* Title color white */
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff !important; /* Text color white */
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: #4b9393 !important; /* Secondary color on hover */
+            }
+
+        .dropdown-menu {
+            background-color: #4b9393; /* Secondary color for dropdown menu */
+        }
+
+            .dropdown-menu .dropdown-item:hover {
+                background-color: #155454; /* Primary color on hover */
+                color: #fff !important; /* Text color white on hover */
+            }
+    </style>
+</head>
+<body style="background-image: url('@Url.Content("~/Images/image.png")'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;position: relative;">
+    <!-- Check if the user is authenticated -->
+    @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+    {
+        <!-- Navigation bar -->
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="#">Investment Portfolio Management</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <!-- Dashboard link -->
+                        <a class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Orders link with userId parameter -->
+                        <a class="nav-link" asp-area="" asp-controller="Orders" asp-action="UserOrders" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Mutual Funds link -->
+                        <a class="nav-link" asp-area="" asp-controller="MutualFunds" asp-action="Index">Mutual Funds</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <!-- Customer Support dropdown menu -->
+                        <a class="nav-link dropdown-toggle" href="#" id="customerSupportDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Customer Support
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="customerSupportDropdown">
+                            <!-- Submit Feedback link -->
+                            <a class="dropdown-item" asp-controller="CustomerSupport" asp-action="SubmitFeedback">Submit Feedback</a>
+                            <!-- Submit Grievance link -->
+                            <a class="dropdown-item" asp-controller="CustomerSupport" asp-action="SubmitGrievance">Submit Grievance</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <!-- Profile dropdown menu -->
+                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="https://img.icons8.com/ios-glyphs/30/000000/user--v1.png" alt="Profile Icon" />
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                            <!-- Profile link with userId parameter -->
+                            <a class="dropdown-item" asp-controller="SignUp" asp-action="Details" asp-route-id="@HttpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)">Profile</a>
+                            <!-- Logout link -->
+                            <a class="dropdown-item" asp-controller="SignUp" asp-action="Logout">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    }
+
+    <!-- Container for the main content of the page -->
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <!-- jQuery and Bootstrap scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- jQuery validation scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+    @RenderSection("Scripts", required: false)
+
+    <!-- Script to clear form fields on page load -->
+    <script>
+        $(document).ready(function () {
+            $('form').each(function () {
+                this.reset(); // Reset each form on page load
+            });
+        });
+    </script>
+</body>
+</html>
+

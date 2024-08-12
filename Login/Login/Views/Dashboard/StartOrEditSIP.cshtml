@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = ViewBag.ExistingSIP != null ? "Edit SIP" : "Start SIP";
+}
+ 
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>@ViewData["Title"] - @(ViewBag.ExistingSIP != null ? "Edit SIP" : "Start SIP")</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+<style>
+        body {
+            color: #343a40;
+            font-family: 'Arial', sans-serif;
+        }
+ 
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+ 
+        h2 {
+            color: #155454;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+ 
+        .btn-primary {
+            background-color: #155454;
+            border-color: #155454;
+            color: white;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+ 
+        .btn-primary:hover {
+            transform: scale(1.05);
+            background-color: #0d3838;
+            border-color: #0d3838;
+        }
+ 
+        .btn-secondary {
+            background-color: #4b9393;
+            border-color: #4b9393;
+            color: white;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+ 
+        .btn-secondary:hover {
+            transform: scale(1.05);
+            background-color: #3b8383;
+            border-color: #3b8383;
+        }
+ 
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+ 
+        .btn-danger:hover {
+            transform: scale(1.05);
+            background-color: #b02a37;
+            border-color: #b02a37;
+        }
+ 
+        .form-group label {
+            color: #155454;
+            font-weight: bold;
+        }
+</style>
+</head>
+<body>
+<div class="container">
+<h2>@(ViewBag.ExistingSIP != null ? "Edit SIP for " : "Start SIP for ")@ViewBag.FundName</h2>
+ 
+        <form asp-action="StartOrEditSIP" method="post">
+<div class="form-group">
+<label for="amount">SIP Amount</label>
+<input type="number" class="form-control" id="amount" name="amount" min="1000" max="50000" value="@ViewBag.ExistingSIP?.SipAmount" required />
+</div>
+<div class="form-group">
+<label for="frequency">Frequency</label>
+<select class="form-control" id="frequency" name="frequency" required>
+<option value="Daily" selected="@(ViewBag.ExistingSIP?.Frequency == "Daily" ? "selected" : null)">Daily</option>
+<option value="Weekly" selected="@(ViewBag.ExistingSIP?.Frequency == "Weekly" ? "selected" : null)">Weekly</option>
+</select>
+</div>
+<input type="hidden" name="folioNumber" value="@ViewBag.FolioNumber" />
+<button type="submit" class="btn btn-primary">Save</button>
+<a asp-action="Index" asp-route-userId="@ViewBag.SelectedUserId" class="btn btn-secondary">Cancel</a>
+</form>
+ 
+        @if (ViewBag.ExistingSIP != null)
+        {
+<form asp-action="CancelSIP" method="post" class="mt-2">
+<input type="hidden" name="folioNumber" value="@ViewBag.FolioNumber" />
+<button type="submit" class="btn btn-danger">Cancel SIP</button>
+</form>
+        }
+</div>
+</body>
+</html>

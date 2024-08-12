@@ -1,0 +1,250 @@
+﻿@model IEnumerable<Login.Models.MutualFund>
+@{
+    ViewData["Title"] = "Mutual Funds";
+    var fundLogos = new Dictionary<string, string>
+    {
+        { "Mid-Cap Equity Fund", Url.Content("~/Images/mid_cap_equity_fund.png") },
+        { "High-Cap Debt Fund", Url.Content("~/Images/high_cap_debt_fund.png") },
+        { "Balanced Fund", Url.Content("~/Images/balanced_fund.png") },
+        { "Low-Cap Equity Fund", Url.Content("~/Images/low_cap_equity_fund.png") },
+        { "Global Debt Fund", Url.Content("~/Images/global_debt_fund.png") },
+        { "High-Cap Balanced Fund", Url.Content("~/Images/high_cap_balanced_fund.png") },
+        { "Low-Cap Debt Fund", Url.Content("~/Images/low_cap_debt_fund.png") },
+        { "Mid-Cap Balanced Fund", Url.Content("~/Images/mid_cap_balanced_fund.png") },
+        { "Global Equity Fund", Url.Content("~/Images/global_equity_fund.png") },
+        { "Mid-Cap Debt Fund", Url.Content("~/Images/mid_cap_debt_fund.png") }
+    };
+    var defaultLogo = Url.Content("~/Images/default_fund_logo.png");
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mutual Funds</title>
+    <style>
+        .filter-section {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-section .form-label {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 0;
+            margin-right: 10px;
+        }
+
+        .filter-section .form-select {
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s;
+            font-size: 1rem;
+            margin-left: 10px;
+        }
+
+            .filter-section .form-select:focus {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+        .card-custom {
+            border-radius: 15px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .card-custom:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            }
+
+            .card-custom .card-body {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .card-custom .card-text {
+                display: flex;
+                gap: 20px;
+            }
+
+        .btn-custom {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-primary {
+            background-color: #155454;
+            border-color: #155454;
+        }
+
+            .btn-primary:hover {
+                background-color: #0e3838;
+                border-color: #0e3838;
+            }
+
+        .btn-success {
+            background-color: #4b9393;
+            border-color: #4b9393;
+        }
+
+            .btn-success:hover {
+                background-color: #367272;
+                border-color: #367272;
+            }
+    </style>
+</head>
+<body>
+    <h1 class="my-4 text-center" style="color: #0e3838">Mutual Funds</h1>
+
+    <div class="filter-section">
+        <div class="filter-container">
+            <label for="FundType" class="form-label">Fund Type</label>
+            <select id="FundType" name="fundType" class="form-select shadow-sm" onchange="filterMutualFunds()">
+                <option value="">None</option>
+                <option value="Large-Cap">Large-Cap</option>
+                <option value="Mid-Cap">Mid-Cap</option>
+                <option value="Small-Cap">Small-Cap</option>
+            </select>
+        </div>
+        <div class="filter-container">
+            <label for="RiskCategory" class="form-label">Risk Category</label>
+            <select id="RiskCategory" name="riskCategory" class="form-select shadow-sm" onchange="filterMutualFunds()">
+                <option value="">None</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+        </div>
+        <div class="filter-container">
+            <label for="AssetClass" class="form-label">Asset Class</label>
+            <select id="AssetClass" name="assetClass" class="form-select shadow-sm" onchange="filterMutualFunds()">
+                <option value="">None</option>
+                <option value="Equity">Equity</option>
+                <option value="Debt">Debt</option>
+                <option value="Balanced">Balanced</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="mutualFundsCards" class="row">
+        @foreach (var item in Model)
+        {
+            var fundLogo = fundLogos.ContainsKey(item.FundName) ? fundLogos[item.FundName] : defaultLogo;
+            <div class="col-12 mb-4">
+                <div class="card card-custom h-100">
+                    <div class="card-body">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <img src="@fundLogo" alt="@item.FundName Logo" style="width: 50px; height: 50px; margin-right: 10px;">
+                                <h5 class="card-title mb-0" style="font-size: 1.5rem; font-weight: bold;">
+                                    @item.FundName
+                                </h5>
+                            </div>
+                            <p class="card-text mb-0">
+                                <strong>Fund Type:</strong> @Html.DisplayFor(modelItem => item.FundType)<br>
+                                <strong>Asset Class:</strong> @Html.DisplayFor(modelItem => item.AssetClass)<br>
+                                <strong>Risk Category:</strong> @Html.DisplayFor(modelItem => item.RiskCategory)<br>
+                                <strong>Return Percentage:</strong> @Html.DisplayFor(modelItem => item.ReturnPercentage)
+                            </p>
+                        </div>
+                        <div class="ml-auto">
+                            <a asp-action="Details" asp-route-id="@item.FundId" class="btn btn-primary btn-custom mr-2">Details</a>
+                            <a asp-action="Invest" asp-route-id="@item.FundId" class="btn btn-success btn-custom">Invest</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <script>
+        var fundLogos = @Html.Raw(Json.Serialize(fundLogos));
+        var defaultLogo = "@defaultLogo";
+
+        // Function to filter mutual funds based on user input
+        function filterMutualFunds() {
+            // Retrieve values from filter dropdowns
+            var fundType = document.getElementById("FundType").value;
+            var riskCategory = document.getElementById("RiskCategory").value;
+            var assetClass = document.getElementById("AssetClass").value;
+
+            // Create a new XMLHttpRequest object to send the request to the server
+            var xhr = new XMLHttpRequest();
+
+            // Configure the request: method is GET, URL is dynamically generated with filter parameters
+            xhr.open("GET", `@Url.Action("Filter", "MutualFunds")?fundType=${fundType}&riskCategory=${riskCategory}&assetClass=${assetClass}`, true);
+
+            // Set request header to accept JSON response
+            xhr.setRequestHeader("Accept", "application/json");
+
+            // Define what happens when the request state changes
+            xhr.onreadystatechange = function () {
+                // Check if the request is completed and was successful
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Parse the JSON response into a JavaScript object
+                    var mutualFunds = JSON.parse(xhr.responseText);
+
+                    // Get the container where mutual fund cards will be displayed
+                    var cardsContainer = document.getElementById("mutualFundsCards");
+
+                    // Clear any existing content in the container
+                    cardsContainer.innerHTML = "";
+
+                    // Iterate over the filtered mutual funds and create HTML for each card
+                    mutualFunds.forEach(function (fund) {
+                        var fundLogo = fundLogos[fund.fundName] || defaultLogo;
+                        var card = `
+                                            <div class="col-12 mb-4">
+                                                <div class="card card-custom h-100">
+                                                    <div class="card-body">
+                                                        <div>
+                                                            <div class="d-flex align-items-center">
+                                                                <img src="${fundLogo}" alt="${fund.fundName} Logo" style="width: 50px; height: 50px; margin-right: 10px;">
+                                                                <h5 class="card-title mb-0" style="font-size: 1.5rem; font-weight: bold;">
+                                                                    ${fund.fundName}
+                                                                </h5>
+                                                            </div>
+                                                            <p class="card-text mb-0">
+                                                                <strong>Fund Type:</strong> ${fund.fundType}<br>
+                                                                <strong>Asset Class:</strong> ${fund.assetClass}<br>
+                                                                <strong>Risk Category:</strong> ${fund.riskCategory}<br>
+                                                                <strong>Return Percentage:</strong> ${fund.returnPercentage}
+                                                            </p>
+                                                        </div>
+                                                        <div class="ml-auto">
+                                                            <a href="@Url.Action("Details", "MutualFunds")/${fund.fundId}" class="btn btn-primary btn-custom mr-2">Details</a>
+                                                            <a href="@Url.Action("Invest", "MutualFunds")/${fund.fundId}" class="btn btn-success btn-custom">Invest</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>`;
+
+                        // Append the new card HTML to the container
+                        cardsContainer.innerHTML += card;
+                    });
+                }
+            };
+
+            // Send the request to the server
+            xhr.send();
+        }
+
+        // Initial call to display all mutual funds on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            filterMutualFunds();
+        });
+    </script>
+</body>
+</html>

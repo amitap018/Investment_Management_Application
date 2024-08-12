@@ -1,0 +1,162 @@
+﻿@model Login.ViewModels.MutualFundOrderViewModel
+
+@{
+    ViewData["Title"] = "Invest";
+}
+
+<!-- Mutual Fund Details Card -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h4 class="mb-0">@Model.MutualFund.FundName Details</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Fund Name</dt>
+            <dd class="col-sm-9">@Model.MutualFund.FundName</dd>
+
+            <dt class="col-sm-3">NAV</dt>
+            <dd class="col-sm-9">@Model.MutualFund.Nav</dd>
+        </dl>
+    </div>
+</div>
+
+<!-- Investment Details Card -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h4 class="mb-0">Investment Details</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="Invest" method="post">
+            <div class="form-group">
+                <label asp-for="OrderType" class="form-label">Order Type</label>
+                <select asp-for="OrderType" class="form-select" id="OrderType">
+                    <option value="">Select Order Type</option>
+                    <option value="Lump Sum">One Time</option>
+                    <option value="SIP">SIP</option>
+                </select>
+                <span asp-validation-for="OrderType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Amount" class="form-label">Amount</label>
+                <input asp-for="Amount" class="form-control" min="@Model.MutualFund.MinimumInvestAmount" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+
+            <div id="sipFields" style="display:none;">
+                <div class="form-group">
+                    <label asp-for="Frequency" class="form-label">Frequency</label>
+                    <select asp-for="Frequency" class="form-select" id="Frequency">
+                        <option value="">Select Frequency</option>
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                    </select>
+                    <span asp-validation-for="Frequency" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SipDate" class="form-label">SIP Date</label>
+                    <input asp-for="SipDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="SipDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <input type="hidden" asp-for="MutualFund.FundId" />
+            <input type="submit" value="Invest" class="btn btn-primary" />
+        </form>
+    </div>
+</div>
+
+<div class="d-flex justify-content-end">
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+
+@section Scripts {
+    <!-- Include validation scripts that are needed for client-side validation -->
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // jQuery function that executes when the document is fully loaded
+        $(document).ready(function () {
+            // Attach a change event handler to the 'OrderType' dropdown
+            $('#OrderType').change(function () {
+                // Check the selected value of the dropdown
+                if ($(this).val() === 'SIP') {
+                    // If the selected value is 'SIP', show the additional fields for SIP
+                    $('#sipFields').show();
+                } else {
+                    // Otherwise, hide the SIP fields
+                    $('#sipFields').hide();
+                }
+            }).trigger('change'); // Trigger the change event on page load to set the initial visibility of the SIP fields based on the current selection
+        });
+    </script>
+}
+
+
+<style>
+    /* Card Styling */
+    .card {
+        border-radius: 15px; /* Rounded corners for the card */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
+        border: none;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover effect */
+        margin-top: 20px;
+    }
+
+    .card-header {
+        background-color: #155454; /* Primary color */
+        border-bottom: 1px solid #dee2e6;
+        padding: 1rem;
+        border-radius: 15px 15px 0 0; /* Rounded top corners */
+    }
+
+        .card-header h4 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+            color: #fff; /* White text color */
+        }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    /* Hover Effect */
+    .card:hover {
+        transform: translateY(-5px); /* Lift the card up slightly */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+    }
+
+    /* Form Elements Styling */
+    .form-label {
+        font-weight: bold;
+        color: #495057;
+    }
+
+    .form-select, .form-control {
+        border-radius: 0.25rem;
+        box-shadow: none;
+    }
+
+    .btn-primary {
+        background-color: #155454; /* Primary color */
+        color: #fff;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #4b9393; /* Secondary color */
+        }
+
+    .btn-secondary {
+        background-color: #4b9393; /* Secondary color */
+        color: #fff;
+        border: none;
+    }
+
+        .btn-secondary:hover {
+            background-color: #155454; /* Primary color */
+        }
+
+</style>

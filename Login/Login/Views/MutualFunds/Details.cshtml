@@ -1,0 +1,308 @@
+﻿@model Login.ViewModels.MutualFundOrderViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    var fundLogos = new Dictionary<string, string>
+    {
+        { "Mid-Cap Equity Fund", Url.Content("~/Images/mid_cap_equity_fund.png") },
+        { "High-Cap Debt Fund", Url.Content("~/Images/high_cap_debt_fund.png") },
+        { "Balanced Fund", Url.Content("~/Images/balanced_fund.png") },
+        { "Low-Cap Equity Fund", Url.Content("~/Images/low_cap_equity_fund.png") },
+        { "Global Debt Fund", Url.Content("~/Images/global_debt_fund.png") },
+        { "High-Cap Balanced Fund", Url.Content("~/Images/high_cap_balanced_fund.png") },
+        { "Low-Cap Debt Fund", Url.Content("~/Images/low_cap_debt_fund.png") },
+        { "Mid-Cap Balanced Fund", Url.Content("~/Images/mid_cap_balanced_fund.png") },
+        { "Global Equity Fund", Url.Content("~/Images/global_equity_fund.png") },
+        { "Mid-Cap Debt Fund", Url.Content("~/Images/mid_cap_debt_fund.png") }
+    };
+    var fundLogo = fundLogos.ContainsKey(Model.MutualFund.FundName) ? fundLogos[Model.MutualFund.FundName] : Url.Content("~Images/default_fund_logo.png");
+}
+
+<div class="card mb-4 mt-4">
+    <div class="card-header">
+        <div class="d-flex align-items-center">
+            <img src="@fundLogo" alt="@Model.MutualFund.FundName Logo" style="width: 50px; height: 50px; margin-right: 10px;">
+            <h4 class="mb-0" style="font-size: 1.5rem; font-weight: bold;">
+                @Model.MutualFund.FundName Details
+            </h4>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-6">Fund Name</dt>
+                    <dd class="col-sm-6">@Model.MutualFund.FundName</dd>
+
+                    <dt class="col-sm-6">Fund Type</dt>
+                    <dd class="col-sm-6">@Model.MutualFund.FundType</dd>
+
+                    <dt class="col-sm-6">Risk Category</dt>
+                    <dd class="col-sm-6">@Model.MutualFund.RiskCategory</dd>
+
+                    <dt class="col-sm-6">Asset Class</dt>
+                    <dd class="col-sm-6">@Model.MutualFund.AssetClass</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-6">NAV</dt>
+                    <dd class="col-sm-6">@Model.MutualFund.Nav</dd>
+
+                    <dt class="col-sm-6">Expense Ratio</dt>
+                    <dd class="col-sm-6">@Model.MutualFund.ExpenseRatio</dd>
+
+                    <dt class="col-sm-6">AUM</dt>
+                    <dd class="col-sm-6">@Model.MutualFund.Aum</dd>
+
+                    <dt class="col-sm-6">Return Percentage</dt>
+                    <dd class="col-sm-6">@Model.MutualFund.ReturnPercentage</dd>
+
+                    <dt class="col-sm-6">Minimum Invest Amount</dt>
+                    <dd class="col-sm-6">@Model.MutualFund.MinimumInvestAmount</dd>
+
+                    <dt class="col-sm-6">Exit Load</dt>
+                    <dd class="col-sm-6">@Model.MutualFund.ExitLoad</dd>
+
+                    <dt class="col-sm-6">Exit Load Period</dt>
+                    <dd class="col-sm-6">@Model.MutualFund.ExitLoadPeriod</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Button to Show Calculator -->
+<button class="btn btn-primary mb-4" id="showCalculatorButton"> Show Return Calculator </button>
+
+<!-- Return Calculator Card -->
+<div class="card mb-4 mt-4" id="returnCalculatorCard" style="display: none;">
+    <div class="card-header">
+        <h4 class="mb-0">Return Calculator</h4>
+    </div>
+    <div class="card-body">
+        <form id="returnCalculatorForm">
+            <div class="form-group">
+                <label for="investmentAmount" class="form-label">Investment Amount</label>
+                <input type="number" id="investmentAmount" class="form-control" placeholder="Enter amount" min="@Model.MutualFund.MinimumInvestAmount" step="0.01" />
+            </div>
+
+            <div class="form-group">
+                <label for="investmentType" class="form-label">Investment Type</label>
+                <select id="investmentType" class="form-select">
+                    <option value="">Select Investment Type</option>
+                    <option value="Lump Sum">Lump Sum</option>
+                    <option value="SIP">SIP</option>
+                </select>
+            </div>
+
+            <div id="sipOptions" style="display: none;">
+                <div class="form-group">
+                    <label for="sipFrequency" class="form-label">SIP Frequency</label>
+                    <select id="sipFrequency" class="form-select">
+                        <option value="">Select Frequency</option>
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="calculateReturns()">Calculate Returns</button>
+        </form>
+
+        <div id="result" class="mt-4" style="display: none;">
+            <h5>Estimated Returns:</h5>
+            <p id="return1Year"></p>
+            <p id="return3Years"></p>
+            <p id="return5Years"></p>
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-primary mb-4" id="showPerformanceButton">View Performance</button>
+
+<div class="card mb-4 mt-4" id="fundPerformanceCard" style="display: none;">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title">Fund Performance</h5>
+        </div>
+        <canvas id="performanceChart" style="max-height: 400px;"></canvas>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between">
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    <a asp-action="Invest" asp-route-id="@Model.MutualFund.FundId" class="btn btn-primary">Invest</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#showCalculatorButton').click(function () {
+                $('#returnCalculatorCard').toggle();
+            });
+            $('#showPerformanceButton').click(function () {
+                $('#fundPerformanceCard').toggle();
+                if ($('#fundPerformanceCard').is(':visible')) {
+                    loadPerformanceChart();
+                }
+            });
+            $('#investmentType').change(function () {
+                if ($(this).val() === 'SIP') {
+                    $('#sipOptions').show();
+                } else {
+                    $('#sipOptions').hide();
+                }
+            }).trigger('change');
+        });
+
+        function calculateReturns() {
+            var amount = parseFloat($('#investmentAmount').val());
+            var type = $('#investmentType').val();
+            var returnPercentage = parseFloat('@Model.MutualFund.ReturnPercentage');
+
+            if (isNaN(amount) || amount <= @Model.MutualFund.MinimumInvestAmount || isNaN(returnPercentage)) {
+                alert("Please enter minimum " + @Model.MutualFund.MinimumInvestAmount);
+                return;
+            }
+
+            var rate = returnPercentage / 100;
+            var return1Year = 0;
+            var return3Years = 0;
+            var return5Years = 0;
+
+            if (type === 'Lump Sum') {
+                return1Year = amount * Math.pow(1 + rate, 1);
+                return3Years = amount * Math.pow(1 + rate, 3);
+                return5Years = amount * Math.pow(1 + rate, 5);
+            } else if (type === 'SIP') {
+                var frequency = $('#sipFrequency').val();
+                return1Year = calculateSIPReturns(amount, 1, frequency, rate);
+                return3Years = calculateSIPReturns(amount, 3, frequency, rate);
+                return5Years = calculateSIPReturns(amount, 5, frequency, rate);
+            }
+
+            $('#result').show();
+            $('#return1Year').text("1 Year Return: " + return1Year.toFixed(2));
+            $('#return3Years').text("3 Years Return: " + return3Years.toFixed(2));
+            $('#return5Years').text("5 Years Return: " + return5Years.toFixed(2));
+        }
+
+        function calculateSIPReturns(amount, years, frequency, rate) {
+            var n = frequency === 'Daily' ? 365 : 52;
+            var r = rate / n;
+            var totalPeriods = years * n;
+            var futureValue = 0;
+
+            for (var t = 0; t < totalPeriods; t++) {
+                futureValue += amount * Math.pow(1 + r, totalPeriods - t);
+            }
+            return futureValue;
+        }
+
+        function loadPerformanceChart() {
+            var ctx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2020', '2021', '2022', '2023'],
+                    datasets: [{
+                        label: '@Model.MutualFund.FundName Performance',
+                        data: [12, 19, 3, 5], // Example data, replace with actual data
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Performance (%)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}
+
+<style>
+    /* Custom CSS Enhancements */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #155454;
+    color: #fff;
+    border-bottom: 1px solid #155454;
+    border-radius: 10px 10px 0 0;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.form-select, .form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.btn-primary {
+    background-color: #155454;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #4b9393;
+}
+
+.btn-secondary {
+    background-color: #4b9393;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #155454;
+}
+
+#showCalculatorButton, #showPerformanceButton {
+    margin-bottom: 20px;
+}
+
+#result {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#result h5 {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+</style>

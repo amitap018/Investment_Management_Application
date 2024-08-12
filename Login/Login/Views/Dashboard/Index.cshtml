@@ -1,0 +1,331 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Investment Portfolio Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+        body {
+            background-image: url('@Url.Content("~/Images/image.png")');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #343a40;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+            .card:hover {
+                transform: scale(1.05);
+            }
+
+        .card-total-investment {
+            background-color: #155454;
+            color: white;
+        }
+
+        .card-total-pandl {
+            background-color: #4b9393;
+            color: white;
+        }
+
+        .card-portfolio-amount {
+            background-color: #f6c23e;
+            color: #343a40;
+        }
+
+        .table {
+            background-color: #ffffff;
+        }
+
+            .table thead th {
+                background-color: #155454;
+                color: white;
+                border-bottom: 2px solid #dee2e6;
+            }
+
+            .table tbody tr:hover {
+                background-color: #e9ecef;
+            }
+
+        .btn {
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+            .btn:hover {
+                transform: scale(1.05);
+            }
+
+        .btn-sm {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.4rem;
+        }
+
+        .btn-info {
+            background-color: #4b9393;
+            border-color: #4b9393;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #155454;
+            border-color: #155454;
+            color: white;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .dashboard-page {
+            min-height: 100vh;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .display-4 {
+            font-size: 1.75rem;
+            font-weight: 300;
+        }
+
+        .form-control-sm {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.4rem;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .flex-item {
+            flex: 1;
+            margin: 10px;
+        }
+
+        .table-container {
+            flex: 0.7;
+        }
+
+        .cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .table tbody tr td {
+            vertical-align: middle;
+        }
+
+        .alert-dismissible .close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0.75rem 1.25rem;
+            color: inherit;
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+    <div class="container mt-4">
+        @if (ViewBag.SuccessMessage != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @ViewBag.SuccessMessage
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @ViewBag.ErrorMessage
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-8 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title">Fund Performance</h5>
+                            <select class="form-control form-control-sm w-auto" id="fundSelect">
+                                <option value="" selected disabled>Select Mutual Fund</option>
+                                @foreach (var fund in (IEnumerable<Login.Models.UserFund>)ViewBag.UserFunds)
+                                {
+                                    <option value="@fund.MutualFund.FundName">@fund.MutualFund.FundName</option>
+                                }
+                            </select>
+                        </div>
+                        <canvas id="performanceChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="cards-container">
+                    <div class="card card-total-investment shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total Investment</h5>
+                            <p class="card-text display-4">₹@ViewBag.TotalInvestment</p>
+                        </div>
+                    </div>
+                    <div class="card card-total-pandl shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total P&L</h5>
+                            <p class="card-text display-4">₹@ViewBag.TotalPandL</p>
+                        </div>
+                    </div>
+                    <div class="card card-portfolio-amount shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Portfolio Amount</h5>
+                            <p class="card-text display-4">₹@ViewBag.PortfolioAmount</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="mb-3">Individual Investments</h4>
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Folio Number</th>
+                        <th>Fund Name</th>
+                        <th>Invested Amount</th>
+                        <th>Current Value</th>
+                        <th>P&L</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in (IEnumerable<Login.Models.UserFund>)ViewBag.UserFunds)
+                    {
+                        <tr>
+                            <td>@item.FolioNumber</td>
+                            <td>@item.MutualFund.FundName</td>
+                            <td>₹@item.InvestedAmount</td>
+                            <td>₹@item.CurrentValue</td>
+                            <td>₹@item.PAndL</td>
+                            <td>
+                                <a class="btn btn-info btn-sm" asp-action="Details" asp-route-folioNumber="@item.FolioNumber">Details</a>
+                                <a class="btn btn-primary btn-sm" asp-action="OneTimeInvestment" asp-route-folioNumber="@item.FolioNumber">Invest More</a>
+                                @if (!((IEnumerable<Login.Models.SIP>)ViewBag.UserSIPs).Any(s => s.FolioNumber == item.FolioNumber))
+                                {
+                                    <a class="btn btn-success btn-sm" asp-action="StartOrEditSIP" asp-route-folioNumber="@item.FolioNumber">Start SIP</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-warning btn-sm" asp-action="StartOrEditSIP" asp-route-folioNumber="@item.FolioNumber">Edit SIP</a>
+                                }
+                                <a class="btn btn-danger btn-sm" asp-action="Redeem" asp-route-folioNumber="@item.FolioNumber">Redeem</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const ctx = document.getElementById('performanceChart').getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({ length: 34 }, (_, i) => i + 1),
+                        datasets: [{
+                            label: 'Performance',
+                            data: [],
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(75, 192, 192, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            },
+                            legend: {
+                                display: true,
+                                labels: {
+                                    color: '#343a40'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: '#343a40'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: '#343a40'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                document.getElementById('fundSelect').addEventListener('change', function (e) {
+                    fetch(`/Dashboard/GetFundPerformance?fund=${encodeURIComponent(e.target.value)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            chart.data.datasets[0].data = data;
+                            chart.update();
+                        });
+                });
+            });
+        </script>
+    }
+</body>
+</html>

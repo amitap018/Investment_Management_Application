@@ -1,0 +1,200 @@
+﻿
+
+@model Login.Models.Feedback
+
+@{
+    ViewData["Title"] = "Submit Feedback";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Investment Portfolio Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .feedback-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feedback-card {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .feedback-title {
+            color: white;
+            background-color: #155454;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.50rem;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 30px; /* Added margin-bottom */
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            background-color: #155454;
+            border-color: #155454;
+            padding: 10px 20px; /* Adjust padding for middle size */
+            font-size: 1rem; /* Adjust font size for middle size */
+            color: white;
+            width: 100%;
+        }
+
+            .btn-primary:hover,
+            .btn-secondary:hover {
+                background-color: #4b9393;
+                border-color: #4b9393;
+            }
+
+        .text-center a {
+            color: #155454;
+        }
+
+            .text-center a:hover {
+                color: #4b9393;
+            }
+
+        .feedback-img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .card-header {
+            background: transparent;
+            text-align: center;
+            border-bottom: none;
+        }
+
+        .form-section {
+            padding-top: 10px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            padding-left: 40px;
+            flex: 1;
+        }
+
+        .img-section {
+            flex: 1;
+        }
+
+        .form-container {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container feedback-container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card shadow-lg p-4 mb-5 bg-white feedback-card">
+                    <div class="img-section">
+                        <img src="~/Images/feedback.png" class="card-img feedback-img" alt="Feedback Image">
+                    </div>
+                    <div class="form-section">
+                        <div class="form-container">
+                            <h4 class="feedback-title">Submit Your Feedback</h4>
+                            <form asp-action="SubmitFeedback" method="post" class="needs-validation" novalidate id="feedbackForm">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="Rating" class="control-label"></label>
+                                    <select asp-for="Rating" class="form-control" required>
+                                        <option value="">Select a rating</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                    <span asp-validation-for="Rating" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Description" class="control-label"></label>
+                                    <textarea asp-for="Description" class="form-control" rows="4" required></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Success</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Your feedback has been submitted successfully!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    An error occurred while submitting your feedback. Please try again.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script>
+            $(document).ready(function () {
+                var feedbackSubmission = '@TempData["FeedbackSubmission"]';
+
+                if (feedbackSubmission === "Success") {
+                    $('#successModal').modal('show');
+                } else if (feedbackSubmission === "Error") {
+                    $('#errorModal').modal('show');
+                }
+
+                $('#successModal, #errorModal').on('hidden.bs.modal', function () {
+                    $('#feedbackForm')[0].reset();
+                });
+            });
+        </script>
+    }
+</body>
+</html>

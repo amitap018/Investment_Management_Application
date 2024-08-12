@@ -1,0 +1,72 @@
+﻿@model Login.Models.VerifyOtpModel
+
+@{
+    ViewData["Title"] = "Verify OTP";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Investment Portfolio Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+</head>
+<body class="bg-light verify-otp-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg p-3 mb-5 bg-white rounded verify-otp-card">
+                    <div class="card-header verify-otp-card-header text-white text-center">
+                        <h4>Verify OTP</h4>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="VerifyOtp" method="post" class="needs-validation" novalidate>
+                            <input type="hidden" asp-for="Email" />
+                            <div class="form-group">
+                                <label asp-for="Code" class="control-label">Code:</label>
+                                <input asp-for="Code" class="form-control" required />
+                                <span asp-validation-for="Code" class="text-danger"></span>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg verify-otp-submit-btn">Verify</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+</body>
+</html>
+
+<style>
+    .verify-otp-page {
+        background: #f8f9fa;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .verify-otp-card {
+        margin-top: 20px;
+    }
+
+    .verify-otp-card-header {
+        background: linear-gradient(135deg, #155454, #4b9393);
+    }
+
+    .verify-otp-submit-btn {
+        background: #155454;
+        border: none;
+    }
+
+        .verify-otp-submit-btn:hover {
+            background: #4b9393;
+        }
+</style>
